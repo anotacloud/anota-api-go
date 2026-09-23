@@ -110,6 +110,8 @@ Every method takes a `context.Context` first and returns `(map[string]any, error
 | 24 | `AddWebhook(ctx, formID, url)` | `POST /forms/{formId}/webhooks` |
 | 25 | `DeleteWebhook(ctx, formID, webhookID)` | `DELETE /forms/{formId}/webhooks/{webhookId}` |
 
+**Webhook signing secrets are shown once.** `AddWebhook(ctx, formID, url)` returns the full signing `secret` (`whsec_…`) in its response (`id`, `formId`, `url`, `secret`, `note`); store it then. `ListWebhooks(ctx, formID)` never returns it: each row carries `secretHint` (`whsec_…` plus the last 4 characters, or just `whsec_…` for short secrets) and `secretNote` instead of `secret`. To replace a lost secret, delete the webhook and add it again. See [CHANGELOG.md](CHANGELOG.md).
+
 `fields`/`field` are `map[string]any` with keys `type`, `label`, `required?`,
 `options?`, `rows?`, `columns?`. `rules`/`rule` carry `match`, `if`, and `then`.
 `answers` is a `map[string]any` keyed by field id, with `string` or `[]string`
