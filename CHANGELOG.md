@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased (next major)
+## 1.1.0 — 2026-09-23
 
-### Breaking
+### Changed (server-side API)
 
 - The anota API (production change of 2026-09-23) no longer returns a webhook's full signing
   secret when listing webhooks (`GET /api/v1/forms/{formId}/webhooks`, MCP `list_webhooks`).
@@ -16,7 +16,9 @@
   again.
 - Method signatures are unchanged; the doc comments and READMEs now describe the new shape.
 
-Note: publishing this as v2.0.0 requires changing the module path in `go.mod` to `github.com/anotacloud/anota-api-go/v2` (Go semantic import versioning).
+Released as a v1 minor on purpose: no SDK code or signature changed (`ListWebhooks` returns the
+server JSON as-is), so moving the module path to `/v2` would force every caller to change imports
+for a documentation-only update.
 
 ## 1.0.0
 
