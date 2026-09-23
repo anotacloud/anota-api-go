@@ -112,6 +112,8 @@ Cada método recibe un `context.Context` primero y devuelve `(map[string]any, er
 | 24 | `AddWebhook(ctx, formID, url)` | `POST /forms/{formId}/webhooks` |
 | 25 | `DeleteWebhook(ctx, formID, webhookID)` | `DELETE /forms/{formId}/webhooks/{webhookId}` |
 
+**El secreto de firma del webhook se muestra una sola vez.** `AddWebhook(ctx, formID, url)` devuelve el `secret` completo (`whsec_…`) en su respuesta (`id`, `formId`, `url`, `secret`, `note`): guárdalo en ese momento. `ListWebhooks(ctx, formID)` nunca lo devuelve: cada fila trae `secretHint` (`whsec_…` más los últimos 4 caracteres, o solo `whsec_…` si el secreto es corto) y `secretNote` en lugar de `secret`. Si lo pierdes, elimina el webhook y vuelve a agregarlo para obtener un secreto nuevo. Consulta [CHANGELOG.md](CHANGELOG.md).
+
 `fields`/`field` son `map[string]any` con las claves `type`, `label`,
 `required?`, `options?`, `rows?`, `columns?`. `rules`/`rule` llevan `match`,
 `if` y `then`. `answers` es un `map[string]any` indexado por id de campo, con

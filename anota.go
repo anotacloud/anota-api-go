@@ -277,11 +277,21 @@ func (c *Client) CreateFormFromTemplate(ctx context.Context, templateID string) 
 // ----- webhooks -----
 
 // ListWebhooks returns the webhooks registered on a form.
+//
+// Each row has id, url, events, enabled, secretHint and secretNote.
+// The full signing secret is never returned here: secretHint is a masked form
+// ("whsec_…" + last 4 characters, or just "whsec_…" for short secrets) that identifies
+// which secret a receiver holds, and secretNote explains the show-once rule. To replace a
+// lost secret, delete the webhook and add it again.
 func (c *Client) ListWebhooks(ctx context.Context, formID string) (map[string]any, error) {
 	return c.request(ctx, http.MethodGet, "/forms/"+formID+"/webhooks", nil, nil)
 }
 
 // AddWebhook registers a webhook URL on a form.
+//
+// The webhook receives submission.created events. The response
+// (id, formId, url, secret, note) is the ONLY place the full signing secret appears:
+// store it now, it cannot be read back later (ListWebhooks shows only secretHint).
 func (c *Client) AddWebhook(ctx context.Context, formID, webhookURL string) (map[string]any, error) {
 	return c.request(ctx, http.MethodPost, "/forms/"+formID+"/webhooks", map[string]any{"url": webhookURL}, nil)
 }
